@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CardLab V3.0 — Cyber Collection</title>
+<style>
+:root{--bg:#080b13;--panel:#101727;--panel2:#151f32;--line:#273650;--cyan:#35f0dc;--purple:#a77bff;--pink:#ff5fc8;--text:#edf5ff;--muted:#8da0b9;--gold:#ffd36a;--good:#70efaa;--shadow:0 18px 55px #0008}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% -10%,#17344b 0,transparent 36%),radial-gradient(ellipse at 95% 10%,#30184b 0,transparent 32%),var(--bg);color:var(--text);font:15px/1.45 Inter,system-ui,Segoe UI,sans-serif;min-height:100vh}
+button,input,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);color:var(--text);background:#18243a;border-radius:12px;padding:10px 14px;transition:.2s}button:hover{border-color:var(--cyan);transform:translateY(-1px);box-shadow:0 0 18px #35f0dc22}button.primary{background:linear-gradient(110deg,#087e83,#5932a4);border:0;font-weight:800}button.ghost{background:transparent}button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+input,select{background:#0b1220;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;outline:none;min-width:0}input:focus,select:focus{border-color:var(--cyan)}
+header{position:sticky;top:0;z-index:10;background:#080d17dd;backdrop-filter:blur(18px);border-bottom:1px solid #26364d;padding:12px max(18px,calc((100vw - 1250px)/2));display:flex;align-items:center;gap:16px}
+.logo{font-weight:1000;letter-spacing:1.5px;font-size:20px}.logo span{color:var(--cyan)}.version{font-size:10px;color:var(--purple);border:1px solid #805bd6;border-radius:99px;padding:3px 7px}
+.topstats{margin-left:auto;display:flex;gap:10px;align-items:center;color:var(--muted);font-size:13px}.pill{border:1px solid var(--line);border-radius:99px;padding:7px 11px;background:#111a2a}.pill b{color:var(--cyan)}
+.shell{max-width:1250px;margin:22px auto;padding:0 18px 50px;display:grid;grid-template-columns:220px 1fr;gap:20px}
+nav{align-self:start;position:sticky;top:82px;background:#0d1523d9;border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:var(--shadow)}
+nav button{width:100%;text-align:left;margin:3px 0;background:transparent;border-color:transparent;color:#b8c7dc}nav button.active{background:linear-gradient(90deg,#123746,#251d43);border-color:#31556a;color:white}
+.navlabel{font-size:10px;letter-spacing:1.5px;color:#60738d;padding:12px 10px 5px}
+main{min-width:0}.view{display:none;animation:fade .35s ease}.view.active{display:block}@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hero{background:linear-gradient(120deg,#102c39,#201739 75%);border:1px solid #31516a;border-radius:22px;padding:24px;display:flex;justify-content:space-between;gap:20px;align-items:center;overflow:hidden;position:relative}.hero:after{content:"";position:absolute;width:240px;height:240px;border:1px solid #54f6df55;border-radius:50%;right:6%;top:-130px;box-shadow:0 0 0 25px #54f6df0a,0 0 0 55px #a77bff0b}.hero h1{font-size:clamp(25px,4vw,38px);line-height:1.05;margin:0 0 9px}.hero p{color:#a8bad0;margin:0;max-width:540px}.hero .hero-actions{z-index:1;display:flex;gap:8px;flex-wrap:wrap}
+.sectionhead{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:22px 0 12px}.sectionhead h2{margin:0;font-size:19px}.muted{color:var(--muted)}.small{font-size:12px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel{background:linear-gradient(145deg,#111b2b,#0c1421);border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:var(--shadow)}.panel h3{margin:0 0 10px;font-size:16px}.stat{font-size:25px;font-weight:900;color:var(--cyan)}.statlabel{font-size:12px;color:var(--muted)}
+.progress{height:8px;border-radius:99px;background:#202c40;overflow:hidden;margin:8px 0}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:99px}
+.profilehead{display:flex;align-items:center;gap:14px}.avatar{width:64px;height:64px;border-radius:20px;background:linear-gradient(140deg,#20d8c5,#884dff);display:grid;place-items:center;font-size:28px;border:2px solid #a6fff3;box-shadow:0 0 22px #35f0dc44}.tag{font-size:11px;border-radius:99px;padding:4px 8px;background:#1c2940;color:#c3d2e8;border:1px solid #344762;display:inline-block}.rarity{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:900}.common{color:#b6c4d6}.rare{color:#48c7ff}.epic{color:#c18aff}.legendary{color:var(--gold);text-shadow:0 0 12px #ffd36a66}
+.cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:15px}.bankcard{aspect-ratio:1.62;border-radius:17px;padding:16px;position:relative;overflow:hidden;color:white;box-shadow:0 12px 28px #0008;border:1px solid #ffffff42;isolation:isolate;transition:.25s}.bankcard:hover{transform:translateY(-4px) rotate(-.5deg);box-shadow:0 16px 34px #000b}.bankcard:before{content:"";position:absolute;inset:-30%;background:repeating-linear-gradient(120deg,transparent 0 22px,#ffffff12 23px 25px);transform:rotate(-12deg);z-index:-1}.bankcard:after{content:"";position:absolute;width:180px;height:180px;border:1px solid #ffffff44;border-radius:50%;right:-55px;top:-75px;box-shadow:0 0 0 18px #ffffff0a,0 0 0 38px #ffffff08;z-index:-1}.cardtop{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1px;font-weight:900}.chip{width:31px;height:23px;border-radius:6px;background:linear-gradient(135deg,#f9e6a0,#ad9a5c);margin:17px 0 10px;opacity:.9;border:1px solid #fff8}.cardname{font-size:16px;font-weight:900;letter-spacing:.7px}.cardbottom{display:flex;justify-content:space-between;align-items:end;margin-top:10px}.fakepan{font-size:12px;letter-spacing:2px;color:#ffffffd9}.cardbrand{font-weight:1000;font-size:17px;font-style:italic}.cardmeta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}.pattern-dots:before{background-image:radial-gradient(#ffffff55 1px,transparent 1px);background-size:12px 12px}.pattern-wave:before{background:repeating-radial-gradient(ellipse at 0 100%,transparent 0 12px,#ffffff24 13px 15px,transparent 16px 25px)}.pattern-grid:before{background:linear-gradient(#ffffff18 1px,transparent 1px),linear-gradient(90deg,#ffffff18 1px,transparent 1px);background-size:16px 16px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.toolbar input{flex:1;min-width:140px}.field{display:flex;flex-direction:column;gap:6px;margin:10px 0}.field label{font-size:12px;color:var(--muted)}.field input,.field select{width:100%}.editorlayout{display:grid;grid-template-columns:minmax(260px,.9fr) minmax(300px,1.1fr);gap:16px}.previewwrap{display:grid;place-items:center;background:radial-gradient(circle,#1c3150,#0a111e 70%);border:1px solid var(--line);border-radius:18px;padding:25px;min-height:320px}.previewwrap .bankcard{width:min(100%,390px)}.swatches{display:flex;gap:8px;flex-wrap:wrap}.swatch{width:30px;height:30px;border-radius:9px;border:2px solid #ffffff55;padding:0}.swatch.selected{outline:2px solid white;outline-offset:2px}
+.modecard{min-height:140px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(140deg,#14243a,#1b1735);border:1px solid var(--line);border-radius:17px;padding:17px}.modeicon{font-size:26px}.modecard p{color:var(--muted);font-size:12px;margin:4px 0 12px}.quest{display:flex;align-items:center;gap:12px;border-bottom:1px solid #24344b;padding:12px 0}.quest:last-child{border:0}.quest .qicon{font-size:22px}.quest .qbody{flex:1}.quest .qbody b{display:block}.quest .qbody span{font-size:12px;color:var(--muted)}.achievement{display:flex;gap:11px;align-items:center;padding:11px;border:1px solid var(--line);border-radius:13px;background:#101a2a}.achievement .medal{font-size:23px}.achievement.locked{opacity:.48;filter:grayscale(1)}
+.modalback{position:fixed;inset:0;background:#02050bd9;z-index:30;display:none;place-items:center;padding:18px}.modalback.show{display:grid}.modal{width:min(480px,100%);background:#111b2b;border:1px solid #3a5674;border-radius:20px;padding:22px;box-shadow:0 25px 90px #000d;animation:pop .25s ease}@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}.modal h2{margin:0 0 8px}.toast{position:fixed;right:18px;bottom:18px;background:#122538;border:1px solid var(--cyan);border-radius:13px;padding:12px 16px;z-index:50;box-shadow:var(--shadow);animation:fade .2s}
+footer{text-align:center;color:#647792;font-size:11px;padding:22px}
+@media(max-width:850px){.shell{grid-template-columns:1fr}.shell nav{position:static;display:flex;overflow:auto;gap:4px;padding:8px}.navlabel{display:none}nav button{white-space:nowrap;width:auto;margin:0}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){header{padding:10px 12px}.topstats .pill:nth-child(2){display:none}.shell{padding:0 12px 30px;margin-top:12px}.hero{padding:18px;display:block}.hero-actions{margin-top:15px}.grid,.two,.editorlayout{grid-template-columns:1fr}.cardgrid{grid-template-columns:1fr}.previewwrap{min-height:250px}.hero:after{right:-100px}}
+</style>
+</head>
+<body>
+<header><div class="logo">CARD<span>LAB</span></div><span class="version">V3.0 CYBER</span><div class="topstats"><span class="pill">Ур. <b id="topLevel">1</b></span><span class="pill">◈ <b id="topCoins">250</b></span><span class="pill">✦ <b id="topXP">0 XP</b></span></div><button class="ghost" id="soundToggle" title="Звук">♫</button></header>
+<div class="shell">
+<nav>
+<div class="navlabel">ИГРА</div>
+<button class="active" data-view="home">⌂ Главная</button>
+<button data-view="modes">⚡ Режимы игры</button>
+<button data-view="editor">✎ Редактор карт</button>
+<button data-view="collection">▦ Коллекция</button>
+<button data-view="cases">◇ Кейсы и награды</button>
+<div class="navlabel">ПРОГРЕСС</div>
+<button data-view="profile">◉ Профиль</button>
+<button data-view="quests">☼ Задания</button>
+<button data-view="achievements">✧ Достижения</button>
+<button data-view="leaderboard">♜ Локальный рейтинг</button>
+<div class="navlabel">СИСТЕМА</div>
+<button data-view="settings">⚙ Настройки</button>
+</nav>
+<main>
+<section class="view active" id="home">
+<div class="hero"><div><div class="tag">NEON CARD UNIVERSE</div><h1>Создавай свой<br><span style="color:var(--cyan)">стиль.</span></h1><p>Собирай фантазийные карточки, открывай редкие визуальные стили и прокачивай профиль. Все данные вымышлены — это творческая игра, не платёжные карты.</p></div><div class="hero-actions"><button class="primary" onclick="go('editor')">＋ Создать карту</button><button onclick="go('cases')">Открыть кейс ◇</button></div></div>
+<div class="sectionhead"><h2>Твой прогресс</h2><span class="muted small" id="dailyDate"></span></div>
+<div class="grid">
+<div class="panel"><div class="stat" id="homeCards">0</div><div class="statlabel">Карт в коллекции</div></div>
+<div class="panel"><div class="stat" id="homeLevel">1</div><div class="statlabel">Уровень профиля</div></div>
+<div class="panel"><div class="stat" id="homeStreak">1</div><div class="statlabel">Дней в игре подряд</div></div>
+</div>
+<div class="sectionhead"><h2>Последняя созданная карта</h2><button class="ghost small" onclick="go('collection')">Вся коллекция →</button></div>
+<div id="featuredCard"></div>
+<div class="sectionhead"><h2>Быстрый старт</h2></div>
+<div class="grid">
+<div class="modecard"><div class="modeicon">🎨</div><div><b>Свободное создание</b><p>Настрой цвета, фон, узор и шрифт.</p><button onclick="go('editor')">Открыть редактор</button></div></div>
+<div class="modecard"><div class="modeicon">🎁</div><div><b>Ежедневный подарок</b><p>Забери монеты и опыт за вход.</p><button onclick="claimDaily()">Получить подарок</button></div></div>
+<div class="modecard"><div class="modeicon">🌌</div><div><b>Случайный генератор</b><p>Удиви себя необычным сочетанием.</p><button onclick="randomCard()">Сгенерировать</button></div></div>
+</div>
+</section>
+<section class="view" id="modes">
+<div class="sectionhead"><h2>Режимы игры</h2><span class="muted small">Выбери способ получить опыт</span></div>
+<div class="grid">
+<div class="modecard"><div class="modeicon">🎨</div><div><b>Свободное создание</b><p>Полная свобода: создавай собственные фантазийные дизайны.</p><button class="primary" onclick="go('editor')">Начать</button></div></div>
+<div class="modecard"><div class="modeicon">🧩</div><div><b>Испытания дизайна</b><p>Выполни тематический челлендж и получи награду.</p><button onclick="startChallenge()">Начать испытание</button></div></div>
+<div class="modecard"><div class="modeicon">💎</div><div><b>Открытие редких карт</b><p>Открывай кейсы и ищи редкие косметические стили.</p><button onclick="go('cases')">К кейсам</button></div></div>
+<div class="modecard"><div class="modeicon">🎲</div><div><b>Случайный генератор</b><p>Случайная палитра, узор и название.</p><button onclick="randomCard()">Случайная карта</button></div></div>
+</div>
+<div class="panel" style="margin-top:15px"><h3 id="challengeTitle">Испытание дня</h3><p class="muted" id="challengeText">Создай карту в бирюзово-фиолетовой гамме.</p><span class="tag">Награда: 80 монет + 35 XP</span></div>
+</section>
+<section class="view" id="editor">
+<div class="sectionhead"><h2>Полный редактор</h2><span class="muted small">Только вымышленные дизайны</span></div>
+<div class="editorlayout">
+<div class="panel">
+<div class="field"><label>Название карты</label><input id="cardName" maxlength="22" value="NEON DREAM"></div>
+<div class="field"><label>Имя владельца (игровое)</label><input id="ownerName" maxlength="18" value="PLAYER ONE"></div>
+<div class="field"><label>Вымышленный бренд</label><select id="brand"><option>NOVA</option><option>CYBER</option><option>ORBIT</option><option>PIXEL</option><option>NEBULA</option><option>VORTEX</option></select></div>
+<div class="field"><label>Основной фон</label><div class="swatches" id="swatches"></div></div>
+<div class="field"><label>Узор</label><select id="pattern"><option value="none">Без узора</option><option value="dots">Неоновые точки</option><option value="wave">Волны</option><option value="grid">Сетка</option></select></div>
+<div class="field"><label>Эффект</label><select id="effect"><option value="glow">Неоновое свечение</option><option value="soft">Мягкий градиент</option><option value="metal">Металлик</option><option value="holo">Голографический</option></select></div>
+<div class="field"><label>Шрифт</label><select id="font"><option value="system">Современный</option><option value="mono">Технический</option><option value="serif">Классический</option></select></div>
+<div class="field"><label>Рамка профиля карты</label><select id="frame"><option value="standard">Стандарт</option><option value="neon">Неон</option><option value="gold">Золотая</option></select></div>
+<div class="toolbar"><button class="primary" onclick="saveCard()">Сохранить в коллекцию</button><button onclick="randomizeEditor()">Случайный стиль</button></div>
+</div>
+<div class="previewwrap"><div id="editorPreview"></div><p class="muted small" style="text-align:center">Макетная карточка • номер и платёжные данные не создаются</p></div>
+</div>
+</section>
+<section class="view" id="collection">
+<div class="sectionhead"><h2>Моя коллекция</h2><span class="muted small" id="collectionCount">0 карт</span></div>
+<div class="toolbar"><input id="searchCards" placeholder="Поиск по названию или бренду…" oninput="renderCollection()"><select id="sortCards" onchange="renderCollection()"><option value="new">Сначала новые</option><option value="old">Сначала старые</option><option value="rarity">По редкости</option><option value="name">По названию</option></select><select id="filterRarity" onchange="renderCollection()"><option value="all">Все редкости</option><option>Обычная</option><option>Редкая</option><option>Эпическая</option><option>Легендарная</option></select></div>
+<div id="collectionGrid" class="cardgrid" style="margin-top:15px"></div>
+</section>
+<section class="view" id="cases">
+<div class="sectionhead"><h2>Кейсы и награды</h2><span class="muted small">Косметические предметы и стили</span></div>
+<div class="grid">
+<div class="panel"><div style="font-size:34px">📦</div><h3>Неоновый кейс</h3><p class="muted small">Случайная редкость: обычная — легендарная.</p><div class="stat">100 ◈</div><button class="primary" onclick="openCase(100)">Открыть кейс</button></div>
+<div class="panel"><div style="font-size:34px">💠</div><h3>Премиум кейс</h3><p class="muted small">Повышенный шанс эпической или легендарной редкости.</p><div class="stat">220 ◈</div><button class="primary" onclick="openCase(220,true)">Открыть кейс</button></div>
+<div class="panel"><div style="font-size:34px">🎁</div><h3>Ежедневный подарок</h3><p class="muted small">Монеты и опыт за ежедневный вход.</p><div class="stat">Бесплатно</div><button onclick="claimDaily()">Забрать награду</button></div>
+</div>
+<div class="sectionhead"><h2>Доступные стили</h2></div><div id="skinShop" class="grid"></div>
+</section>
+<section class="view" id="profile">
+<div class="panel">
+<div class="profilehead"><div class="avatar" id="avatar">✦</div><div style="flex:1"><h2 id="profileNick" style="margin:0">PLAYER ONE</h2><span class="tag" id="profileTitle">Новичок</span> <span class="tag" id="profileFrame">Неоновая рамка</span><div class="muted small" id="profileLevel">Уровень 1</div></div><button onclick="editProfile()">Изменить профиль</button></div>
+<div style="margin-top:18px"><div class="toolbar" style="justify-content:space-between"><b>Опыт до следующего уровня</b><span class="muted small" id="xpLabel">0 / 100 XP</span></div><div class="progress"><span id="xpBar" style="width:0%"></span></div></div>
+</div>
+<div class="sectionhead"><h2>Статистика игрока</h2></div><div class="grid">
+<div class="panel"><div class="stat" id="statCards">0</div><div class="statlabel">Создано карт</div></div>
+<div class="panel"><div class="stat" id="statCases">0</div><div class="statlabel">Открыто кейсов</div></div>
+<div class="panel"><div class="stat" id="statChallenges">0</div><div class="statlabel">Пройдено испытаний</div></div>
+<div class="panel"><div class="stat" id="statAchievements">0</div><div class="statlabel">Достижений</div></div>
+<div class="panel"><div class="stat" id="statCoins">250</div><div class="statlabel">Монеты</div></div>
+<div class="panel"><div class="stat" id="statRare">0</div><div class="statlabel">Редкие и выше</div></div>
+</div>
+</section>
+<section class="view" id="quests">
+<div class="sectionhead"><h2>Ежедневные задания</h2><button onclick="claimDaily()">🎁 Ежедневный подарок</button></div>
+<div class="panel" id="questList"></div>
+</section>
+<section class="view" id="achievements">
+<div class="sectionhead"><h2>Достижения</h2><span class="muted small">Открывай секретные награды</span></div><div id="achievementList" class="grid"></div>
+</section>
+<section class="view" id="leaderboard">
+<div class="sectionhead"><h2>Локальный рейтинг</h2><span class="tag">На этом устройстве</span></div>
+<div class="panel"><p class="muted small">Рейтинг хранится только в браузере. Это не онлайн-таблица и не содержит реальных игроков.</p><div id="leaderboardList"></div><button onclick="addBotScores()">Добавить тренировочных соперников</button></div>
+</section>
+<section class="view" id="settings">
+<div class="sectionhead"><h2>Настройки</h2></div><div class="panel">
+<div class="field"><label>Громкость музыки и интерфейса: <b id="volumeLabel">35%</b></label><input type="range" id="volume" min="0" max="100" value="35" oninput="setVolume(this.value)"></div>
+<div class="toolbar"><button onclick="toggleSound()">Включить / выключить звук</button><button onclick="playTone()">Проверить звук</button></div>
+<div class="field"><label>Тема</label><select id="theme"><option value="cyber">Чёрный + бирюзовый + фиолетовый</option><option value="warm">Чёрный + розовый + красный</option></select></div>
+<div class="toolbar"><button onclick="exportSave()">Экспорт сохранения</button><button onclick="document.getElementById('importFile').click()">Импорт сохранения</button><input id="importFile" type="file" accept="application/json" hidden onchange="importSave(event)"><button class="ghost" onclick="resetGame()">Сбросить прогресс</button></div>
+<p class="muted small">Автосохранение включено. Прогресс хранится локально в этом браузере. Экспортируй резервную копию, если меняешь устройство.</p>
+</div>
+</section>
+<footer>CardLab V3.0 • Игровые макеты вымышленных карт • Не является банковским или платёжным сервисом</footer>
+</main></div>
+<div class="modalback" id="modal"><div class="modal"><div id="modalContent"></div><div class="toolbar" style="margin-top:16px"><button class="primary" onclick="closeModal()">Понятно</button></div></div></div>
+<script>
+const $=id=>document.getElementById(id);
+const palettes=[
+{name:'Aqua Pulse',a:'#04c9c2',b:'#3a4fe0',c:'#101c45'},
+{name:'Violet Rift',a:'#7a35df',b:'#e34ba7',c:'#25103e'},
+{name:'Cyber Lime',a:'#a3e635',b:'#0ba88d',c:'#102d35'},
+{name:'Solar Flare',a:'#ff8b3d',b:'#e83d80',c:'#441a3d'},
+{name:'Arctic',a:'#7ad8ff',b:'#6a76ff',c:'#102c4b'},
+{name:'Gold Circuit',a:'#f7c75a',b:'#a85dcb',c:'#332044'},
+{name:'Midnight',a:'#263e65',b:'#171b3c',c:'#080d22'},
+{name:'Candy Flux',a:'#ff69bb',b:'#7b5cff',c:'#351a55'}
+];
+const rarityNames=['Обычная','Редкая','Эпическая','Легендарная'];
+const rarityClass=['common','rare','epic','legendary'];
+const titles=['Новичок','Создатель','Коллекционер','Мастер неона','Легенда CardLab'];
+const defaultState={nick:'PLAYER ONE',avatar:'✦',title:'Новичок',frame:'Неоновая рамка',coins:250,xp:0,level:1,cards:[],cases:0,challenges:0,streak:1,lastDay:'',dailyClaim:'',questDay:'',questProgress:{create:0,case:0,random:0},questClaimed:[],achievements:[],skins:['Aqua Pulse'],unlockedTitles:['Новичок'],scores:[],volume:35,sound:true,theme:'cyber',giftDay:'',secretFound:false};
+let S=load(), currentPalette=0, audioCtx=null;
+function load(){try{return {...defaultState,...JSON.parse(localStorage.getItem('cardlab_v3')||'{}')}}catch(e){return structuredClone(defaultState)}}
+function save(){localStorage.setItem('cardlab_v3',JSON.stringify(S));updateUI()}
+function day(){return new Date().toISOString().slice(0,10)}
+function toast(t){let x=document.createElement('div');x.className='toast';x.textContent=t;document.body.append(x);setTimeout(()=>x.remove(),2600)}
+function go(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(v).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===v));renderAll();window.scrollTo({top:0,behavior:'smooth'});tone(520,.05)}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.view));
+function tone(freq=500,dur=.08){if(!S.sound||S.volume===0)return;try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=freq;g.gain.value=(S.volume/100)*.035;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);o.stop(audioCtx.currentTime+dur)}catch(e){}}
+function playTone(){tone(660,.2);setTimeout(()=>tone(880,.2),150)}
+function toggleSound(){S.sound=!S.sound;save();toast(S.sound?'Звук включён':'Звук выключен')}
+function setVolume(v){S.volume=+v;$('volumeLabel').textContent=v+'%';save()}
+$('soundToggle').onclick=toggleSound;
+function xp(n){S.xp+=n;while(S.xp>=S.level*100){S.xp-=S.level*100;S.level++;S.coins+=50;toast('Новый уровень! +50 монет')}S.title=titles[Math.min(titles.length-1,Math.floor((S.level-1)/3))];if(!S.unlockedTitles.includes(S.title))S.unlockedTitles.push(S.title)}
+function cardHTML(c){let p=palettes.find(x=>x.name===c.palette)||palettes[0],style=`background:linear-gradient(125deg,${p.a},${p.b} 58%,${p.c});`;if(c.effect==='metal')style=`background:linear-gradient(125deg,#d8dbe5,${p.a},#30374c,${p.b});`;if(c.effect==='holo')style=`background:linear-gradient(120deg,#43d9d2,#b26cff,#ff73bd,#f7dc78);`;if(c.effect==='soft')style=`background:linear-gradient(145deg,${p.a},${p.b});`;let font=c.font==='mono'?'ui-monospace,monospace':c.font==='serif'?'Georgia,serif':'system-ui';return `<div class="bankcard pattern-${c.pattern||'none'}" style="${style};font-family:${font};${c.frame==='gold'?'border:2px solid #f8d878;box-shadow:0 0 22px #e9bf5c55;':''}${c.frame==='neon'?'border:2px solid #61fff0;box-shadow:0 0 25px #35f0dc66;':''}"><div class="cardtop"><span>${esc(c.brand||'NOVA')} • CARDLAB</span><span>✦</span></div><div class="chip"></div><div class="cardname">${esc(c.name||'NEON DREAM')}</div><div class="cardbottom"><div><div class="fakepan">••••  ••••  ••••  ••••</div><div style="font-size:10px;margin-top:6px;opacity:.8">${esc(c.owner||'PLAYER ONE')}</div></div><div class="cardbrand">${esc(c.brand||'NOVA')}</div></div></div>`}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function editorData(){return {id:Date.now(),name:$('cardName').value.trim()||'NEON DREAM',owner:$('ownerName').value.trim()||S.nick,brand:$('brand').value,palette:palettes[currentPalette].name,pattern:$('pattern').value,effect:$('effect').value,font:$('font').value,frame:$('frame').value,rarity:0,created:Date.now()}}
+function preview(){let c=editorData();$('editorPreview').innerHTML=cardHTML(c)}
+function initSwatches(){$('swatches').innerHTML=palettes.map((p,i)=>`<button class="swatch ${i===currentPalette?'selected':''}" title="${p.name}" style="background:linear-gradient(135deg,${p.a},${p.b})" onclick="pickPalette(${i})"></button>`).join('')}
+function pickPalette(i){currentPalette=i;initSwatches();preview();tone(600,.05);S.questProgress.random=Math.min(1,S.questProgress.random);save()}
+['cardName','ownerName','brand','pattern','effect','font','frame'].forEach(id=>$(id).addEventListener('input',preview));
+function saveCard(){let c=editorData();S.cards.unshift(c);S.coins+=20;xp(25);S.questProgress.create++;S.scores=[{nick:S.nick,level:S.level,cards:S.cards.length,xp:S.level*100+S.xp},...S.scores.filter(x=>x.nick!==S.nick)];checkAchievements();save();toast('Карта добавлена в коллекцию · +20 монет · +25 XP');go('collection')}
+function randomizeEditor(){currentPalette=Math.floor(Math.random()*palettes.length);$('cardName').value=['NIGHT DRIVE','STAR DUST','NEON DREAM','VOID RUNNER','PIXEL NOVA'][Math.floor(Math.random()*5)];$('brand').selectedIndex=Math.floor(Math.random()*$('brand').options.length);$('pattern').selectedIndex=Math.floor(Math.random()*4);$('effect').selectedIndex=Math.floor(Math.random()*4);$('font').selectedIndex=Math.floor(Math.random()*3);initSwatches();preview();S.questProgress.random++;save();tone(750,.12)}
+function randomCard(){go('editor');randomizeEditor();toast('Случайный дизайн готов — сохрани его!')}
+function renderCollection(){let q=($('searchCards')?.value||'').toLowerCase(),r=$('filterRarity')?.value||'all',sort=$('sortCards')?.value||'new';let arr=S.cards.filter(c=>(c.name+' '+c.brand+' '+c.owner).toLowerCase().includes(q)&&(r==='all'||rarityNames[c.rarity||0]===r));arr.sort((a,b)=>sort==='old'?a.created-b.created:sort==='name'?a.name.localeCompare(b.name):sort==='rarity'?(b.rarity||0)-(a.rarity||0):b.created-a.created);$('collectionCount').textContent=arr.length+' из '+S.cards.length+' карт';$('collectionGrid').innerHTML=arr.length?arr.map(c=>`<div><div>${cardHTML(c)}</div><div class="cardmeta"><span class="rarity ${rarityClass[c.rarity||0]}">${rarityNames[c.rarity||0]}</span><button class="ghost small" onclick="deleteCard(${c.id})">Удалить</button></div></div>`).join(''):'<div class="panel muted">Пока пусто. Создай первую карту в редакторе.</div>'}
+function deleteCard(id){S.cards=S.cards.filter(c=>c.id!==id);save();renderCollection()}
+function openCase(cost,premium=false){if(S.coins<cost){toast('Недостаточно монет');return}S.coins-=cost;S.cases++;let roll=Math.random(),rarity=premium?(roll<.18?3:roll<.65?2:roll<.9?1:0):(roll<.04?3:roll<.2?2:roll<.55?1:0);let p=palettes[Math.floor(Math.random()*palettes.length)];let c={id:Date.now(),name:['STAR SIGNAL','QUANTUM','NIGHT BYTE','AURORA'][Math.floor(Math.random()*4)],owner:S.nick,brand:['NOVA','ORBIT','PIXEL','NEBULA'][Math.floor(Math.random()*4)],palette:p.name,pattern:['dots','wave','grid','none'][Math.floor(Math.random()*4)],effect:['glow','soft','metal','holo'][Math.floor(Math.random()*4)],font:'system',frame:rarity>=3?'gold':rarity>=2?'neon':'standard',rarity,created:Date.now()};S.cards.unshift(c);S.questProgress.case++;xp(20+rarity*10);checkAchievements();save();showModal(`<h2>Кейс открыт!</h2><p class="rarity ${rarityClass[rarity]}">${rarityNames[rarity]}</p>${cardHTML(c)}<p>Новая карта добавлена в коллекцию.</p>`);tone(rarity===3?1000:700,.2)}
+function claimDaily(){let d=day();if(S.giftDay===d){toast('Ежедневный подарок уже получен');return}S.giftDay=d;S.coins+=75;xp(30);S.streak=Math.max(1,S.streak);save();showModal('<h2>🎁 Ежедневный подарок</h2><p>Ты получил <b>75 монет</b> и <b>30 XP</b>. Заходи завтра за новой наградой!');}
+function startChallenge(){if(S.challengeDay===day()){toast('Испытание уже выполнено сегодня');return}S.challengeDay=day();S.challenges++;S.coins+=80;xp(35);S.questProgress.create++;save();showModal('<h2>🏆 Испытание пройдено!</h2><p>Награда: 80 монет и 35 XP.</p>');}
+function checkAchievements(){let defs=[['first','🎨','Первый дизайн','Создай первую карту',()=>S.cards.length>=1],['five','🗂️','Коллекционер','Собери 5 карт',()=>S.cards.length>=5],['case','📦','Любопытство','Открой первый кейс',()=>S.cases>=1],['rare','💎','Охотник за редкостями','Получи эпическую или легендарную карту',()=>S.cards.some(c=>c.rarity>=2)],['level','⚡','На высоте','Достигни 5 уровня',()=>S.level>=5],['secret','🌙','Секретный сигнал','Найди скрытое достижение',()=>S.secretFound]];defs.forEach(d=>{if(d[4]()&&!S.achievements.includes(d[0])){S.achievements.push(d[0]);S.coins+=40;toast('Достижение: '+d[2]+' · +40 монет')}})}
+function renderAchievements(){let defs=[['first','🎨','Первый дизайн','Создай первую карту',S.cards.length>=1],['five','🗂️','Коллекционер','Собери 5 карт',S.cards.length>=5],['case','📦','Любопытство','Открой первый кейс',S.cases>=1],['rare','💎','Охотник за редкостями','Получи эпическую или легендарную карту',S.cards.some(c=>c.rarity>=2)],['level','⚡','На высоте','Достигни 5 уровня',S.level>=5],['secret','🌙','Секретный сигнал','Найди скрытое достижение',S.secretFound]];$('achievementList').innerHTML=defs.map(d=>`<div class="achievement ${d[4]?'':'locked'}"><div class="medal">${d[1]}</div><div><b>${d[2]}</b><div class="muted small">${d[3]}</div><span class="tag">${d[4]?'Открыто':'Заблокировано'}</span></div></div>`).join('')}
+function renderQuests(){let tasks=[['create','🎨','Создай карту','Сохрани 1 дизайн',S.questProgress.create,1,40],['case','📦','Открой кейс','Открой 1 любой кейс',S.questProgress.case,1,35],['random','🎲','Экспериментатор','Выбери палитру в редакторе',S.questProgress.random,1,25]];$('questList').innerHTML=tasks.map(t=>`<div class="quest"><div class="qicon">${t[1]}</div><div class="qbody"><b>${t[2]}</b><span>${t[3]} · ${t[5]}/${t[5]}</span><div class="progress"><span style="width:${Math.min(100,t[4]/t[5]*100)}%"></span></div></div><button ${t[4]<t[5]||S.questClaimed.includes(t[0])?'disabled':''} onclick="claimQuest('${t[0]}',${t[6]})">${S.questClaimed.includes(t[0])?'Получено':'Забрать'}</button></div>`).join('')}
+function claimQuest(id,reward){if(S.questClaimed.includes(id))return;S.questClaimed.push(id);S.coins+=reward;xp(12);save();renderQuests();toast('Награда получена!')}
+function renderLeaderboard(){let rows=[{nick:S.nick,level:S.level,cards:S.cards.length,xp:S.level*100+S.xp},...S.scores.filter(x=>x.nick!==S.nick)].sort((a,b)=>b.level-a.level||b.xp-a.xp);$('leaderboardList').innerHTML=rows.map((x,i)=>`<div class="quest"><b style="width:32px;color:var(--gold)">#${i+1}</b><div class="qbody"><b>${esc(x.nick)}</b><span>Уровень ${x.level} · ${x.cards} карт</span></div><b>${x.xp} XP</b></div>`).join('')}
+function addBotScores(){['NEON FOX','PIXEL_7','VOID CAT'].forEach((n,i)=>{if(!S.scores.some(x=>x.nick===n))S.scores.push({nick:n,level:3+i,cards:4+i*2,xp:350+i*120})});save();renderLeaderboard();toast('Добавлены тренировочные профили')}
+function editProfile(){showModal(`<h2>Профиль игрока</h2><div class="field"><label>Никнейм</label><input id="editNick" maxlength="18" value="${esc(S.nick)}"></div><div class="field"><label>Аватар (эмодзи)</label><input id="editAvatar" maxlength="3" value="${esc(S.avatar)}"></div><div class="field"><label>Титул</label><select id="editTitle">${S.unlockedTitles.map(t=>`<option ${t===S.title?'selected':''}>${esc(t)}</option>`).join('')}</select></div><div class="field"><label>Рамка</label><select id="editFrame"><option>Неоновая рамка</option><option>Золотая рамка</option><option>Космическая рамка</option></select></div><button class="primary" onclick="saveProfile()">Сохранить профиль</button>`)}
+function saveProfile(){S.nick=$('editNick').value.trim()||'PLAYER ONE';S.avatar=$('editAvatar').value||'✦';S.title=$('editTitle').value;S.frame=$('editFrame').value;save();closeModal();toast('Профиль обновлён')}
+function showModal(content){$('modalContent').innerHTML=content;$('modal').classList.add('show')}
+function closeModal(){$('modal').classList.remove('show')}
+function exportSave(){let blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='cardlab-v3-save.json';a.click();URL.revokeObjectURL(a.href)}
+function importSave(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{S={...defaultState,...JSON.parse(r.result)};save();toast('Сохранение импортировано')}catch(err){toast('Не удалось прочитать файл')}};r.readAsText(f)}
+function resetGame(){if(!confirm('Точно сбросить весь прогресс CardLab?'))return;S=structuredClone(defaultState);save();go('home');toast('Прогресс сброшен')}
+function updateUI(){$('topLevel').textContent=S.level;$('topCoins').textContent=S.coins;$('topXP').textContent=S.xp+' XP';$('homeCards').textContent=S.cards.length;$('homeLevel').textContent=S.level;$('homeStreak').textContent=S.streak;$('profileNick').textContent=S.nick;$('avatar').textContent=S.avatar;$('profileTitle').textContent=S.title;$('profileFrame').textContent=S.frame;$('profileLevel').textContent='Уровень '+S.level;$('xpLabel').textContent=S.xp+' / '+(S.level*100)+' XP';$('xpBar').style.width=(S.xp/(S.level*100)*100)+'%';$('statCards').textContent=S.cards.length;$('statCases').textContent=S.cases;$('statChallenges').textContent=S.challenges;$('statAchievements').textContent=S.achievements.length;$('statCoins').textContent=S.coins;$('statRare').textContent=S.cards.filter(c=>(c.rarity||0)>=1).length;$('soundToggle').textContent=S.sound?'♫':'♪';$('volume').value=S.volume;$('volumeLabel').textContent=S.volume+'%';$('theme').value=S.theme;$('featuredCard').innerHTML=S.cards.length?cardHTML(S.cards[0]):'<div class="panel muted">Создай первую карту, чтобы она появилась здесь.</div>'}
+function renderAll(){updateUI();if($('collection').classList.contains('active'))renderCollection();if($('quests').classList.contains('active'))renderQuests();if($('achievements').classList.contains('active'))renderAchievements();if($('leaderboard').classList.contains('active'))renderLeaderboard();if($('editor').classList.contains('active'))preview();if($('cases').classList.contains('active'))renderShop()}
+function renderShop(){let items=[['Aqua Pulse','Базовая палитра',0],['Violet Rift','Фиолетовый неон',80],['Cyber Lime','Кислотный кибер',100],['Solar Flare','Солнечный градиент',120],['Arctic','Ледяной стиль',150],['Gold Circuit','Золотая схема',200]];$('skinShop').innerHTML=items.map(x=>`<div class="panel"><b>${x[0]}</b><p class="muted small">${x[1]}</p><button ${S.skins.includes(x[0])?'disabled':''} onclick="buySkin('${x[0]}',${x[2]})">${S.skins.includes(x[0])?'Открыто':x[2]+' ◈ — Купить'}</button></div>`).join('')}
+function buySkin(name,cost){if(S.coins<cost){toast('Не хватает монет');return}S.coins-=cost;S.skins.push(name);save();renderShop();toast('Стиль открыт: '+name)}
+$('theme').onchange=e=>{S.theme=e.target.value;document.documentElement.style.setProperty('--cyan',S.theme==='warm'?'#ff6eae':'#35f0dc');document.documentElement.style.setProperty('--purple',S.theme==='warm'?'#ff475e':'#a77bff');save()};
+function maybeSecret(){if(!S.secretFound&&$('cardName').value.toLowerCase().includes('matrix')){S.secretFound=true;checkAchievements();save();toast('Секрет найден!')} }
+$('cardName').addEventListener('input',maybeSecret);
+function boot(){if(S.questDay!==day()){S.questDay=day();S.questProgress={create:0,case:0,random:0};S.questClaimed=[]}if(S.lastDay!==day()){S.lastDay=day();S.streak=Math.max(1,S.streak)}$('dailyDate').textContent=new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'long'});initSwatches();preview();updateUI();renderShop();renderQuests();renderAchievements();renderLeaderboard();save()}
+boot();
+</script>
+</body></html>
